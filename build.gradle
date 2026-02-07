@@ -37,7 +37,9 @@ dependencies {
 	// Swagger UI 를 사용하기 위한 의존성을 추가합니다.
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 	
+	// Spring Data JPA 의존성 추가
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// MySQL JDBC 드라이버 의존성 추가.
 	implementation 'mysql:mysql-connector-java:8.0.32'
 
 	// Lombok 라이브러리를 컴파일 시에만 사용하도록 설정합니다.
@@ -45,11 +47,14 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	// Lombok 이 제공하는 기능을 사용하기 위한 애노테이션 프로세서를 추가합니다.
 	annotationProcessor 'org.projectlombok:lombok'
+
 	// JUnit 5를 이용한 테스트를 위한 의존성을 추가합니다.
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	// JUnit 5 테스트를 실행하기 위한 런타임 의존성을 추가합니다.
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	// Import TestContainers for JUnit 5
+	// 임시 MySQL 컨테이너 생성 및 유닛 테스트 수행을 위한 의존성 추가.
 	testImplementation 'org.testcontainers:junit-jupiter:1.20.1'
 	testImplementation 'org.testcontainers:testcontainers:1.20.1'
 	testImplementation 'org.testcontainers:mysql:1.20.1'
