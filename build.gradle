@@ -1,0 +1,76 @@
+// 프로젝트 빌드 과정에서 사용할 플러그인 설정.
+plugins {
+	// 컴파일, 테스트, 패키징, 실행 등 Java 프로젝트 빌드에 필요한 태스크 제공.
+	id 'java'
+	// 스프링 부트 의존성 관리 및 패키징, 자동설정, 실행 관련 태스크 제공.
+	id 'org.springframework.boot' version '3.5.0'
+	// 스프링 의존성 관리 기능 제공.
+	id 'io.spring.dependency-management' version '1.1.7'
+	// 다양한 언어를 위한 코드 포매터와 관련 태스크 제공.
+	id 'com.diffplug.spotless' version '6.25.0'
+}
+
+// 프로젝트 그룹 ID와 버전을 설정합니다.
+group = 'com.asdf'
+version = '0.0.1-dev'
+description = 'Demo project for Spring Boot'
+
+// 자바 컴파일러와 관련된 설정을 추가합니다.
+java {
+	// 자바 21 버전을 사용하도록 설정함.
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+// 프로젝트 의존성을 해결하기 위한 Maven 저장소 추가.
+repositories {
+	mavenCentral()
+}
+
+// 프로젝트의 구현, 테스트, 런타임 의존성을 설정합니다.
+// 여기에서 필요한 의존성을 추가하면, 그래들이 자동으로 의존성을 mavenCentral 을 통해 다운로드합니다.
+dependencies {
+	// Spring Boot Web 스타터 의존성을 추가합니다.
+	// 웹 애플리케이션 개발에 필요한 기본적인 의존성을 제공합니다.
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// Swagger UI 를 사용하기 위한 의존성을 추가합니다.
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+	// Lombok 라이브러리를 컴파일 시에만 사용하도록 설정합니다.
+	// Getter, Setter 등을 자동으로 생성해줍니다.
+	compileOnly 'org.projectlombok:lombok'
+	// Lombok 이 제공하는 기능을 사용하기 위한 애노테이션 프로세서를 추가합니다.
+	annotationProcessor 'org.projectlombok:lombok'
+	// JUnit 5를 이용한 테스트를 위한 의존성을 추가합니다.
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// JUnit 5 테스트를 실행하기 위한 런타임 의존성을 추가합니다.
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+// 테스트 태스크를 구성합니다.
+tasks.named('test') {
+	useJUnitPlatform()
+
+	// 테스트 실행 시 상세한 결과 출력 활성화.
+	testLogging {
+		// 테스트 이벤트 중 어떤 것을 로그로 출력할지 설정.
+		events "passed", "skipped", "failed"
+		// 테스트 케이스 별 결과를 항상 출력하도록 설정.
+		outputs.upToDateWhen { false }
+		// Java Agent 경고 메시지 억제.
+		jvmArgs '-XX:+EnableDynamicAgentLoading'
+	}
+}
+
+// Spotless 플러그인을 사용하여 코드 양식을 자동으로 맞춰줍니다.
+spotless {
+	// Java 파일에 대한 포맷팅 설정을 추가합니다.
+	java {
+		// Google Java Format 적용.
+		// reflowLongStrings => + 연산자를 이용하여 읽기 좋게 변경함.
+		googleJavaFormat('1.22.0').aosp().reflowLongStrings()
+	}
+}
+
+// build 할 때 spotlessApply 를 실행하며 자동으로 코드의 양식을 맞춥니다.
+build.dependsOn 'spotlessApply'
