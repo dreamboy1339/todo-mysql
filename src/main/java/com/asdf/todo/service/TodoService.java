@@ -1,12 +1,17 @@
 package com.asdf.todo.service;
 
+import com.asdf.todo.dto.TodoRequestDto;
+import com.asdf.todo.dto.TodoResponseDto;
 import com.asdf.todo.entity.Todo;
 import com.asdf.todo.repository.TodoRepository;
+import com.asdf.todo.util.EntityDtoMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TodoService {
@@ -17,23 +22,34 @@ public class TodoService {
         this.todoRepository = todoRepository;
     }
 
-    public List<Todo> findAll() {
-        return todoRepository.findAll();
+    @Transactional(readOnly = true)
+    public List<TodoResponseDto> findAll() {
+        return todoRepository.findAll().stream()
+                .map(EntityDtoMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public Todo findById(Long id) {
-        return todoRepository.findById(id);
+    @Transactional(readOnly = true)
+    public TodoResponseDto findById(Long id) {
+        return todoRepository.findById(id).map(EntityDtoMapper::toDto).orElse(null);
     }
 
-    public Todo save(Todo todo) {
-        return todoRepository.save(todo);
+    @Transactional
+    public TodoResponseDto save(TodoRequestDto todoRequestDto) {
+        Todo todo = EntityDtoMapper.toEntity(todoRequestDto);
+        Todo savedTodo = todoRepository.save(todo);
+        return EntityDtoMapper.toDto(savedTodo);
     }
 
-    public Todo update(Long id, Todo todo) {
+    @Transactional
+    public TodoResponseDto update(Long id, TodoRequestDto todoRequestDto) {
+        Todo todo = EntityDtoMapper.toEntity(todoRequestDto);
         todo.setId(id);
-        return todoRepository.save(todo);
+        Todo updatedTodo = todoRepository.save(todo);
+        return EntityDtoMapper.toDto(updatedTodo);
     }
 
+    @Transactional
     public void delete(Long id) {
         todoRepository.deleteById(id);
     }
