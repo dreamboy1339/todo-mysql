@@ -1,8 +1,8 @@
 package com.asdf.todo.repository;
 
-import com.asdf.todo.model.Todo;
-
 import org.springframework.stereotype.Repository;
+
+import com.asdf.todo.entity.Todo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
