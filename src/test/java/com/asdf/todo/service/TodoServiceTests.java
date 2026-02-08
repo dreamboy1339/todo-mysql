@@ -21,8 +21,8 @@ public class TodoServiceTests {
     @BeforeEach
     void setUp() {
         todoService = new TodoService(new TodoInMemoryRepository());
-        todoService.save(new Todo(null, "Test Todo 1", "Description 1", false));
-        todoService.save(new Todo(null, "Test Todo 2", "Description 2", false));
+        todoService.save(new Todo(null, "Test Todo 1", "Description 1", false, null));
+        todoService.save(new Todo(null, "Test Todo 2", "Description 2", false, null));
     }
 
     @AfterEach
@@ -37,7 +37,7 @@ public class TodoServiceTests {
 
     @Test
     void testSaveTodo() throws Exception {
-        Todo todo = new Todo(null, "New Todo", "New Description", false);
+        Todo todo = new Todo(null, "New Todo", "New Description", false, null);
         todoService.save(todo);
 
         assertThat(todoService.findAll()).hasSize(3);
@@ -53,7 +53,7 @@ public class TodoServiceTests {
 
     @Test
     void testUpdateTodo() throws Exception {
-        Todo updatedTodo = new Todo(1L, "Updated Todo", "Updated Description", true);
+        Todo updatedTodo = new Todo(1L, "Updated Todo", "Updated Description", true, null);
         todoService.update(1L, updatedTodo);
         Todo todo = todoService.findById(1L);
 

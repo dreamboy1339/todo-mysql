@@ -55,7 +55,8 @@ public class TodoControllerTests {
 
         given(todoService.findAll())
                 .willReturn(
-                        Collections.singletonList(new Todo(1L, "Test Todo", "Description", false)));
+                        Collections.singletonList(
+                                new Todo(1L, "Test Todo", "Description", false, null)));
 
         mockMvc.perform(get("/api/todos/v1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
